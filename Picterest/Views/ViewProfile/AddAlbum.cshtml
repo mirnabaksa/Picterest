@@ -1,0 +1,75 @@
+﻿@using Picterest.Views.Manage
+@model AddAlbumModel
+@{
+    ViewData["Title"] = "Add an Album";
+    ViewData.AddActivePage(ManageNavPages.Index);
+}
+
+<header><h3 align="center"> @ViewData["Title"]</h3> </header>
+<br />
+<br />
+<div class="row">
+    <form method="post" asp-action="Album" enctype="multipart/form-data">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" enabled />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control"> </textarea>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Save album</button>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <input asp-for="Uploads" name="Uploads" id="files" type="file" multiple/>
+                <hr />
+                <br />
+                <br />
+                <div id="dvPreview"> </div>
+
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+<script language="javascript" type="text/javascript">
+    window.onload = function () {
+        var fileUpload = document.getElementById("files");
+        fileUpload.onchange = function () {
+            if (typeof (FileReader) != "undefined") {
+                var dvPreview = document.getElementById("dvPreview");
+                dvPreview.innerHTML = "";
+                var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+                for (var i = 0; i < fileUpload.files.length; i++) {
+                    var file = fileUpload.files[i];
+                    if (regex.test(file.name.toLowerCase())) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            var img = document.createElement("IMG");
+                            img.height = "100";
+                            img.width = "100";
+                            img.src = e.target.result;
+                            dvPreview.appendChild(img);
+                        }
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert(file.name + " is not a valid image file.");
+                        dvPreview.innerHTML = "";
+                        return false;
+                    }
+                }
+            } else {
+                alert("This browser does not support HTML5 FileReader.");
+            }
+        }
+    };
+</script>
