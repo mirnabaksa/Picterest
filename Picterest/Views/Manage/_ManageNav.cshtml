@@ -1,4 +1,6 @@
-﻿@using Picterest.Views.Manage
+﻿@using Microsoft.AspNetCore.Identity
+@using Picterest.Models
+@using Picterest.Views.Manage
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
