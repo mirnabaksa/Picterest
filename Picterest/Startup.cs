@@ -45,7 +45,7 @@ namespace Picterest
             // Add application services.
             services.AddTransient<IGalleryRepo, GalleryRepo>();
             services.AddTransient<IEmailSender, EmailSender>();
-            services.AddScoped(s => new GalleryDbContext(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient(s => new GalleryDbContext(Configuration.GetConnectionString("DefaultConnection")));
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();

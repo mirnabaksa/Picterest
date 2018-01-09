@@ -9,5 +9,10 @@ namespace Picterest.Models
     {
         public String Username { get; set; }
         public List<Album> Albums { get; set; }
+
+        public ProfileViewModel()
+        {
+            Albums = new List<Album>();
+        }
     }
 }

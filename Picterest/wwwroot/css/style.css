@@ -225,7 +225,6 @@ figure figcaption {
 }
 #fh5co-aside .fh5co-footer ul li {
   padding: 0;
-  margin: 0;
   display: inline;
   list-style: none;
 }
@@ -635,7 +634,6 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
 }
 .fh5co-social li {
   padding: 0;
-  margin: 0;
   list-style: none;
   display: -moz-inline-stack;
   display: inline-block;
@@ -1110,14 +1108,9 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
   display: inline-block;
   zoom: 1;
   *display: inline;
-  width: 30px;
-  height: 2px;
-  color: #000;
   font: bold 14px/.4 Helvetica;
   text-transform: uppercase;
   text-indent: -55px;
-  background: #000;
-  transition: all .2s ease-out;
 }
 .fh5co-nav-toggle i::before, .fh5co-nav-toggle i::after {
   content: '';

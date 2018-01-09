@@ -19,12 +19,12 @@ namespace Picterest.Models
 
         public Album GetAlbum(Guid albumId)
         {
-            throw new NotImplementedException();
+           return  _context.Albums.Where(a => a.AlbumId.Equals(albumId)).Include(i => i.Images).FirstOrDefault();
         }
 
         public Image GetImage(Guid imageId)
         {
-            throw new NotImplementedException();
+            return _context.Images.Where(a => a.ImageId.Equals(imageId)).Include(i => i.Albums).FirstOrDefault();
         }
 
         public void AddImage(Image image)
@@ -41,7 +41,26 @@ namespace Picterest.Models
 
         public async Task<List<Album>> GetUserAlbums(string UserId)
         {
-           return await _context.Albums.Where(i => i.ownerId.Equals(UserId)).ToListAsync();
+           return await _context.Albums
+                .Where(i => i.ownerId.Equals(UserId))
+                .Include(i => i.Images)
+                .ToListAsync();
+        }
+
+        public async Task<List<Image>> GetAlbumImages(Guid albumId, string id)
+        {
+            List<Album> albums = await GetUserAlbums(id);
+            Album album = albums?.Where(a => a.AlbumId.Equals(albumId)).FirstOrDefault();
+            return album?.Images.ToList();
+        }
+
+        public void RemovePhotoFromAlbum(Guid imageId, Guid albumId)
+        {
+            Album album = GetAlbum(albumId);
+            Image image = GetImage(imageId);
+            album.Images.Remove(image);
+            _context.SaveChanges();
+
         }
     }
 }

@@ -9,41 +9,43 @@
 <br />
 <br />
 <div class="row">
-    <form method="post" asp-action="Album" enctype="multipart/form-data">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control" enabled />
+    <form asp-action="Album" method="post" enctype="multipart/form-data">
+        <fieldset>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" enabled/>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="form-control"> </textarea>
+                </div>
+
+
             </div>
 
             <div class="form-group">
-                <label asp-for="Description"></label>
-                <textarea asp-for="Description" class="form-control"> </textarea>
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-success">Save album</button>
-            </div>
-        </div>
-        <div class="col-md-6">
-
-            <div class="form-group">
-                <input asp-for="Uploads" name="Uploads" id="files" type="file" multiple/>
-                <hr />
-                <br />
-                <br />
+                <input asp-for="Photos" type="file" name="Photos" id="file" multiple/>
+                <hr/>
+                <br/>
+                <br/>
                 <div id="dvPreview"> </div>
 
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Save album</button>
+                </div>
             </div>
-
-        </div>
+        </fieldset>
     </form>
+	
+   
 
 </div>
 
 <script language="javascript" type="text/javascript">
     window.onload = function () {
-        var fileUpload = document.getElementById("files");
+        var fileUpload = document.getElementById("file");
         fileUpload.onchange = function () {
             if (typeof (FileReader) != "undefined") {
                 var dvPreview = document.getElementById("dvPreview");

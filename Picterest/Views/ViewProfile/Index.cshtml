@@ -13,7 +13,7 @@
     <div class="col-md-6">
         Your albums:
 
-        @if (Model.Albums.Count == 0)
+        @if (Model == null || Model.Albums == null || Model.Albums.Count == 0)
             {
             @("No albums yet!");
             }
@@ -33,18 +33,20 @@
 <a asp-area="" asp-controller="ViewProfile" asp-action="AddAlbum" title="Add">Add a new album</a>
 
 <div class="fh5co-gallery">
-    @foreach (Album a in Model.Albums)
-    {
-        <a asp-controller ="ViewProfile" asp-action="ViewPhoto" class="gallery-item">
-            <img src="images/work_1.jpg" alt="Free HTML5 Bootstrap Template by FreeHTML5.co">
-            <span class="overlay">
-                <h2>@a.Name</h2>
-                <span>@a.Images.Count</span>
-            </span>
-        </a>
-    }
-   
-   
+@if (!(Model == null || Model.Albums == null || Model.Albums.Count == 0))
+{
+    foreach (Album a in Model.Albums)
+     {
+         <a asp-controller="ViewProfile" asp-action="ViewAlbumImages" asp-route-albumId="@a.AlbumId"class="gallery-item">
+             <img src="images/work_1.jpg" alt="Free HTML5 Bootstrap Template by FreeHTML5.co">
+             <span class="overlay">
+                 <h2>@a.Name</h2>
+                 <span>@a.Images.Count</span>
+             </span>
+         </a>
+     }
+}
+
 </div>
 
 <div class="fh5co-narrow-content">

@@ -12,5 +12,7 @@ namespace Picterest.Models
         void AddImage(Image image);
         void AddAlbum(Album album);
         Task<List<Album>> GetUserAlbums(string UserId);
+        Task<List<Image>> GetAlbumImages(Guid albumId, string id);
+        void RemovePhotoFromAlbum(Guid imageId, Guid albumId);
     }
 }

@@ -10,7 +10,7 @@ namespace Picterest.Models
     {
         public Guid ImageId { get; set; }
         public string OwnerId { get; set; }
-        public string FilePath { get; set; }
+        public string Path { get; set; }
         public List<Album> Albums { get; set; }
 
         public Image()
@@ -19,5 +19,5 @@ namespace Picterest.Models
         }
     }
 
-    
+
 }

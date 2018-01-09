@@ -10,16 +10,18 @@ namespace Picterest.Models
 {
     public class AddAlbumModel
     {
+        public AddAlbumModel()
+        {
+            //Photos = new List<HttpPostedFileBase>();
+        }
+
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Description { get; set; }
-         public IEnumerable<HttpPostedFileBase> Uploads { get; set; }
+        public string Description { get; set; } 
+        //[Required]
+       public IEnumerable<IFormFile> Photos { get; set; }
 
-        public AddAlbumModel()
-        {
-            Uploads = new List<HttpPostedFileBase>();
-        }
-        
+       
     }
 }

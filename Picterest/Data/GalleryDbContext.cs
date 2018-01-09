@@ -14,7 +14,6 @@ namespace Picterest.Data
 
         public GalleryDbContext(string cnnstr) : base(cnnstr)
         {
-
         }
 
         public GalleryDbContext()

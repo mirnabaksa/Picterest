@@ -1,0 +1,24 @@
+﻿@model ViewAlbumImagesModel
+
+@{
+    ViewData["Title"] = "Album";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Album</h2>
+<div class="fh5co-gallery">
+
+    @foreach (Image i in Model.Images)
+    {
+        <div class ="gallery-item">
+        <a asp-action="ViewSingle" asp-controller="ViewProfile" >
+            <img src="/Uploads/@i.Path">
+                <a asp-action="RemovePhotoFromAlbum" asp-controller="ViewProfile" asp-route-albumId="@Model.AlbumId" asp-route-imageId="@i.ImageId">
+                    <h5 align="center">Remove from album</h5>
+                </a>
+              
+        
+        </a>
+        </div>
+    }
+</div>
