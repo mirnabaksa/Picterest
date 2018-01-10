@@ -5,10 +5,14 @@ using System.Threading.Tasks;
 
 namespace Picterest.Models
 {
-    public class ViewAlbumImagesModel
+    public class ImageViewModel
     {
-        public List<Image> Images { get; set; }
-        public Album Album { get; set; }
+        public Image Image { get; set; }
         public bool IsOwner { get; set; }
+
+        public ImageViewModel()
+        {
+            
+        }
     }
 }

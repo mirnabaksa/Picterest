@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Picterest.Data;
 using Picterest.Models;
 
 namespace Picterest.Controllers
@@ -110,11 +111,13 @@ namespace Picterest.Controllers
         public async Task<IActionResult> ViewAlbumImages(Guid albumId)
         {
             var user = await _userManager.GetUserAsync(User);
-            List<Image> images = await _repository.GetAlbumImages(albumId, user.Id);
-            ViewAlbumImagesModel model = new ViewAlbumImagesModel()
+            List<Image> images = _repository.GetAlbumImages(albumId);
+            Album album = _repository.GetAlbum(albumId);
+            ViewAlbumImagesModel model = new ViewAlbumImagesModel
             {
                 Images = images,
-                AlbumId = albumId
+                Album = album,
+                IsOwner = album.ownerId.Equals(user.Id)
             };
             return View("Album",model);
 
@@ -131,9 +134,17 @@ namespace Picterest.Controllers
 
         }
 
-        public void ViewSingle()
+        public async Task<IActionResult>  ViewSingle(Guid imageId)
         {
-            
+            var user = await _userManager.GetUserAsync(User);
+
+            ImageViewModel image = new ImageViewModel
+            {
+                Image = _repository.GetImage(imageId)
+            };
+            image.IsOwner = image.Image.OwnerId.Equals(user.Id);
+            return View(image);
+
         }
 
         public Task<IActionResult> RemovePhotoFromAlbum(Guid imageId, Guid albumId)
@@ -142,7 +153,7 @@ namespace Picterest.Controllers
             return ViewAlbumImages(albumId);
         }
 
-        
+         
     }
 
 }

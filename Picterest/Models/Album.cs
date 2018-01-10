@@ -12,10 +12,14 @@ namespace Picterest.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public List<Image> Images { get; set; }
+        public List<Comment> Comments { get; set; }
+        public List<Like> Likes { get; set; }
 
         public Album()
         {
             Images = new List<Image>();
+            Comments = new List<Comment>();
+            Likes = new List<Like>();
         }
     }
 }

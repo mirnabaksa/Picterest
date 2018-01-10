@@ -5,20 +5,35 @@
     Layout = "/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Album</h2>
-<div class="fh5co-gallery">
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
-    @foreach (Image i in Model.Images)
-    {
-        <div class ="gallery-item">
-        <a asp-action="ViewSingle" asp-controller="ViewProfile" >
-            <img src="/Uploads/@i.Path">
-                <a asp-action="RemovePhotoFromAlbum" asp-controller="ViewProfile" asp-route-albumId="@Model.AlbumId" asp-route-imageId="@i.ImageId">
-                    <h5 align="center">Remove from album</h5>
+<div class="fh5co-narrow-content fh5co-border-bottom">
+    <h2 class="fh5co-heading">@Model.Album.Name</h2>
+    <p><p>@Model.Album.Description</p></p>
+
+
+    <div class="fh5co-gallery">
+
+        @foreach (Image i in Model.Images)
+        {
+            <div class="gallery-item">
+                <a asp-action="ViewSingle" asp-controller="ViewProfile" asp-route-imageId="@i.ImageId">
+                    <img src="/Uploads/@i.Path">
+               
+                @if (Model.IsOwner)
+                {
+                    <a asp-action="RemovePhotoFromAlbum" asp-controller="ViewProfile" asp-route-albumId="@Model.Album.AlbumId" asp-route-imageId="@i.ImageId">
+                        <h5 align="center">Remove from album</h5>
+                    </a>
+                }
+                    
+                
+
+
                 </a>
-              
-        
-        </a>
-        </div>
-    }
+            </div>
+        }
+    </div>
+
 </div>

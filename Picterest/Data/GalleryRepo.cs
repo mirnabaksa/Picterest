@@ -4,8 +4,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Picterest.Data;
+using Picterest.Models;
 
-namespace Picterest.Models
+namespace Picterest.Data
 {
     
     public class GalleryRepo : IGalleryRepo
@@ -47,10 +48,9 @@ namespace Picterest.Models
                 .ToListAsync();
         }
 
-        public async Task<List<Image>> GetAlbumImages(Guid albumId, string id)
+        public List<Image> GetAlbumImages(Guid albumId)
         {
-            List<Album> albums = await GetUserAlbums(id);
-            Album album = albums?.Where(a => a.AlbumId.Equals(albumId)).FirstOrDefault();
+            Album album =  GetAlbum(albumId);
             return album?.Images.ToList();
         }
 
@@ -61,6 +61,11 @@ namespace Picterest.Models
             album.Images.Remove(image);
             _context.SaveChanges();
 
+        }
+
+        public Task<List<Album>> FilterAlbums(string filter)
+        {
+            return _context.Albums.Where(a => a.Name.Trim().ToLower().Contains(filter.Trim().ToLower()) || a.Description.Trim().Contains(filter.Trim().ToLower())).Include(i=> i.Images).ToListAsync();
         }
     }
 }

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Picterest.Models;
 
-namespace Picterest.Models
+namespace Picterest.Data
 {
     public interface IGalleryRepo
     {
@@ -12,7 +13,8 @@ namespace Picterest.Models
         void AddImage(Image image);
         void AddAlbum(Album album);
         Task<List<Album>> GetUserAlbums(string UserId);
-        Task<List<Image>> GetAlbumImages(Guid albumId, string id);
+        List<Image> GetAlbumImages(Guid albumId);
         void RemovePhotoFromAlbum(Guid imageId, Guid albumId);
+        Task<List<Album>> FilterAlbums(string filter);
     }
 }

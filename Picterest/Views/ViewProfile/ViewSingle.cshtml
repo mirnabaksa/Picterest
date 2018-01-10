@@ -1,0 +1,12 @@
+﻿@model ImageViewModel
+@{
+    ViewData["Title"] = "ViewSingle";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row">
+<div class="col-md-12">
+    <figure><img src="/Uploads/@Model.Image.Path" class="img-responsive"></figure>
+</div>

@@ -23,13 +23,27 @@ namespace Picterest.Data
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Album>().HasKey(item => item.AlbumId);
+            modelBuilder.Entity<Album>().HasKey(label => label.AlbumId);
             modelBuilder.Entity<Image>().HasKey(label => label.ImageId);
+            modelBuilder.Entity<Like>().HasKey(label => label.LikeId);
+            modelBuilder.Entity<Comment>().HasKey(label => label.CommentId);
 
             //many - many
             modelBuilder.Entity<Album>()
                 .HasMany(item => item.Images)
                 .WithMany(image => image.Albums);
+
+            modelBuilder.Entity<Album>()
+                .HasMany(item => item.Likes);
+            modelBuilder.Entity<Album>()
+                .HasMany(item => item.Comments);
+
+            modelBuilder.Entity<Image>()
+                .HasMany(item => item.Likes);
+            modelBuilder.Entity<Album>()
+                .HasMany(item => item.Comments);
+
+
         }
     }
 }
