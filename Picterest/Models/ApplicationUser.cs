@@ -10,7 +10,11 @@ namespace Picterest.Models
     public class ApplicationUser : IdentityUser
     {
         public List<Album> FavoriteAlbums { get; set; }
-        
+
+        public ApplicationUser()
+        {
+            FavoriteAlbums = new List<Album>();
+        }
 
     }
 }

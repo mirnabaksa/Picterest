@@ -5,8 +5,50 @@
 }
 
 
+<div class="fh5co-narrow-content">
 
-<div class="row">
-<div class="col-md-12">
-    <figure><img src="/Uploads/@Model.Image.Path" class="img-responsive"></figure>
+    <div class="row">
+        <div class="col-md-12">
+            <figure><img src="/Uploads/@Model.Image.Path" class="img-responsive"></figure>
+        </div>
+    </div>
+    
+    
+    <a asp-action="LikeSingle" asp-controller="ViewProfile" asp-route-imageId="@Model.Image.ImageId">
+        <h2 align="center">Like</h2>
+    </a>
+    
+    
+    
+    <div class="fh5co-border-bottom">
+        @Model.Image.Likes.Count likes ,
+        @Model.Image.Comments.Count comments
+    </div>
+
+    <h2 class="fh5co-heading">Comments</h2>
+    <div class="fh5co-feature  fh5co-border-bottom">
+        @foreach (Comment i in Model.Image.Comments)
+        {
+            <b> @i.UserName </b>
+            @i.Content
+            <br/>
+
+        }
+    </div>
+    
+    
+    
+    Add a comment...
+    <form asp-action="AddCommentToImage" asp-controller="ViewProfile" method="post" enctype="multipart/form-data" asp-route-imageid=@Model.Image.ImageId>
+        <div class="form-group col-md-3">
+            <input type="text" name="Comment"/>
+            <br/>
+            <br/>
+        </div>
+      
+
+        <div class="form-group col-md-3">
+            <button type="submit" class="btn btn-success">Add </button>
+        </div>
+    </form>
 </div>

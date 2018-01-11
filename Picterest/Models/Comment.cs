@@ -10,5 +10,6 @@ namespace Picterest.Models
         public Guid CommentId { get; set; }
         public string Content { get; set; }
         public string UserId { get; set; }
+        public string UserName { get; set; }
     }
 }

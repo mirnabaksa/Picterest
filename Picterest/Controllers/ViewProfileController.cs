@@ -76,32 +76,12 @@ namespace Picterest.Controllers
 
             if (ModelState.IsValid)
             {
+                List<Image> images = await ProcessImages(model.Photos, user, album);
+                foreach (Image i in images) album.Images.Add(i);
 
-                foreach (IFormFile file in model.Photos)
-                {
-                    Image imageEntity = new Image()
-                    {
-                        ImageId = Guid.NewGuid(),
-                        OwnerId = user.Id
-                    };
-                    
-                    var parsedContentDisposition =
-                        ContentDispositionHeaderValue.Parse(file.ContentDisposition);
-                    var filename = Path.Combine(_hostingEnvironment.WebRootPath,
-                        "Uploads", parsedContentDisposition.FileName.Trim('"'));
-                    using (var stream = System.IO.File.OpenWrite(filename))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-
-                    imageEntity.Path = file.FileName;
-                    album.Images.Add(imageEntity);
-                    imageEntity.Albums.Add(album);
-                }
-               
             }
 
-          
+
             _repository.AddAlbum(album);
             return RedirectToAction("Index");
         }
@@ -118,8 +98,11 @@ namespace Picterest.Controllers
                 Images = images,
                 Album = album,
                 IsOwner = album.ownerId.Equals(user.Id)
+
             };
-            return View("Album",model);
+
+
+            return View("Album", model);
 
         }
 
@@ -127,14 +110,14 @@ namespace Picterest.Controllers
         public ActionResult RenderImage(Guid id)
         {
             Image image = _repository.GetImage(id);
-           
+
             var dir = System.Web.HttpContext.Current.Server.MapPath("/Uploads");
             var path = Path.Combine(dir, image.Path + ".jpg"); //validate the path for security or use other means to generate the path.
             return base.File(path, "image/jpeg");
 
         }
 
-        public async Task<IActionResult>  ViewSingle(Guid imageId)
+        public async Task<IActionResult> ViewSingle(Guid imageId)
         {
             var user = await _userManager.GetUserAsync(User);
 
@@ -143,7 +126,7 @@ namespace Picterest.Controllers
                 Image = _repository.GetImage(imageId)
             };
             image.IsOwner = image.Image.OwnerId.Equals(user.Id);
-            return View(image);
+            return View("ViewSingle",image);
 
         }
 
@@ -153,7 +136,122 @@ namespace Picterest.Controllers
             return ViewAlbumImages(albumId);
         }
 
-         
+        public async Task<IActionResult> AddImages(Guid albumId, List<IFormFile> Photos)
+        {
+            Album album = _repository.GetAlbum(albumId);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (ModelState.IsValid)
+            {
+                List<Image> images = await ProcessImages(Photos, user, album);
+                _repository.AddImagesToAlbum(albumId, images);
+            }
+            return await ViewAlbumImages(albumId);
+        }
+
+        private async Task<List<Image>> ProcessImages(IEnumerable<IFormFile> Photos, ApplicationUser user, Album album)
+        {
+            List<Image> images = new List<Image>();
+            foreach (IFormFile file in Photos)
+            {
+                Image imageEntity = new Image()
+                {
+                    ImageId = Guid.NewGuid(),
+                    OwnerId = user.Id
+                };
+
+                var parsedContentDisposition =
+                    ContentDispositionHeaderValue.Parse(file.ContentDisposition);
+                var filename = Path.Combine(_hostingEnvironment.WebRootPath,
+                    "Uploads", parsedContentDisposition.FileName.Trim('"'));
+                using (var stream = System.IO.File.OpenWrite(filename))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                imageEntity.Path = file.FileName;
+                images.Add(imageEntity);
+                imageEntity.Albums.Add(album);
+            }
+
+            return images;
+        }
+
+        public async Task<IActionResult> Like(Guid imageId, Guid albumid)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            Like like = new Like
+            {
+                LikeId = Guid.NewGuid(),
+                UserId = user.Id,
+                UserName = user.UserName
+            };
+            _repository.Like(imageId, like);
+            return await ViewAlbumImages(albumid);
+        }
+
+        public async Task<IActionResult> LikeSingle(Guid imageId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            Like like = new Like
+            {
+                LikeId = Guid.NewGuid(),
+                UserId = user.Id,
+                UserName = user.UserName
+            };
+            _repository.Like(imageId, like);
+            return await ViewSingle(imageId);
+        }
+
+        /*
+        public async Task<IActionResult> ViewLikes(Guid imageId, Guid albumId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            List<Like> likes = _repository.GetLikes(imageId);
+            return await ViewAlbumImages(albumId);
+        }*/
+
+        [HttpPost]
+        public async Task<IActionResult> AddCommentToAlbum(Guid albumId, string Comment)
+        {
+            var user = await _userManager.GetUserAsync(User);
+           
+            Comment comment = new Comment()
+            {
+                CommentId = Guid.NewGuid(),
+                Content = Comment,
+                UserId = user.Id,
+                UserName = user.UserName
+
+            };
+            _repository.AddCommentToAlbum(albumId, comment);
+            return await ViewAlbumImages(albumId);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCommentToImage(Guid imageid, string Comment)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            Comment comment = new Comment()
+            {
+                CommentId = Guid.NewGuid(),
+                Content = Comment,
+                UserId = user.Id,
+                UserName = user.UserName
+
+            };
+            _repository.AddCommentToImage(imageid, comment);
+            return await ViewSingle(imageid);
+        }
+
+        public async Task<IActionResult> AddToFavorites(Guid albumId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            _repository.GetAlbum(albumId);
+            user.FavoriteAlbums.Add(_repository.GetAlbum(albumId));
+            return await ViewAlbumImages(albumId);
+        }
     }
 
 }

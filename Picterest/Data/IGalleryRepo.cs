@@ -16,5 +16,10 @@ namespace Picterest.Data
         List<Image> GetAlbumImages(Guid albumId);
         void RemovePhotoFromAlbum(Guid imageId, Guid albumId);
         Task<List<Album>> FilterAlbums(string filter);
+        void AddImagesToAlbum(Guid albumId, IEnumerable<Image> images);
+        void Like(Guid imageId, Like like);
+        List<Like> GetLikes(Guid imageId);
+        void AddCommentToAlbum(Guid albumId, Comment comment);
+        void AddCommentToImage(Guid imageid, Comment comment);
     }
 }
