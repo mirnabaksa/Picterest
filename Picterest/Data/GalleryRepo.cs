@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Picterest.Data;
 using Picterest.Models;
 
 namespace Picterest.Data
 {
-    
+
     public class GalleryRepo : IGalleryRepo
     {
         private readonly GalleryDbContext _context;
@@ -18,9 +19,14 @@ namespace Picterest.Data
             _context = context;
         }
 
+        public void AddUser(User user)
+        {
+            _context.Users.Add(user);
+            _context.SaveChanges();
+        }
         public Album GetAlbum(Guid albumId)
         {
-           return  _context.Albums.Where(a => a.AlbumId.Equals(albumId)).Include(i => i.Images).Include(i => i.Comments).FirstOrDefault();
+            return _context.Albums.Where(a => a.AlbumId.Equals(albumId)).Include(i => i.Images).Include(i => i.Comments).FirstOrDefault();
         }
 
         public Image GetImage(Guid imageId)
@@ -42,15 +48,15 @@ namespace Picterest.Data
 
         public async Task<List<Album>> GetUserAlbums(string UserId)
         {
-           return await _context.Albums
-                .Where(i => i.ownerId.Equals(UserId))
-                .Include(i => i.Images)
-                .ToListAsync();
+            return await _context.Albums
+                 .Where(i => i.ownerId.Equals(UserId))
+                 .Include(i => i.Images)
+                 .ToListAsync();
         }
 
         public List<Image> GetAlbumImages(Guid albumId)
         {
-            Album album =  GetAlbum(albumId);
+            Album album = GetAlbum(albumId);
             return album?.Images.ToList();
         }
 
@@ -65,13 +71,13 @@ namespace Picterest.Data
 
         public Task<List<Album>> FilterAlbums(string filter)
         {
-            return _context.Albums.Where(a => a.Name.Trim().ToLower().Contains(filter.Trim().ToLower()) || a.Description.Trim().Contains(filter.Trim().ToLower())).Include(i=> i.Images).ToListAsync();
+            return _context.Albums.Where(a => a.Name.Trim().ToLower().Contains(filter.Trim().ToLower()) || a.Description.Trim().Contains(filter.Trim().ToLower())).Include(i => i.Images).ToListAsync();
         }
 
         public void AddImagesToAlbum(Guid albumId, IEnumerable<Image> images)
         {
             Album album = GetAlbum(albumId);
-            foreach(Image i in images) album.Images.Add(i);
+            foreach (Image i in images) album.Images.Add(i);
             _context.SaveChanges();
         }
 
@@ -99,6 +105,32 @@ namespace Picterest.Data
         {
             Image image = GetImage(imageid);
             image.Comments.Add(comment);
+            _context.SaveChanges();
+        }
+
+        public void AddFavorite(ApplicationUser user, Guid albumId)
+        {
+            User myUser = GetUser(user.Id);
+            myUser?.FavoriteAlbums.Add(GetAlbum(albumId));
+            _context.SaveChanges();
+        }
+
+        public User GetUser(string userId)
+        {
+            return _context.Users.Where(u => u.Id.Equals(userId)).Include(
+                u => u.FavoriteAlbums).FirstOrDefault();
+        }
+
+        public List<Comment> getComments(Guid imageId)
+        {
+            return GetImage(imageId).Comments;
+        }
+
+        public void Dislike(Guid imageId, string userId)
+        {
+            Image i = GetImage(imageId);
+            Like like =  i.Likes?.Where(l => l.UserId.Equals(userId)).FirstOrDefault();
+            i.Likes?.Remove(like);
             _context.SaveChanges();
         }
     }

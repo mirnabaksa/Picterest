@@ -9,6 +9,7 @@ namespace Picterest.Data
 {
     public class GalleryDbContext : DbContext
     {
+        public IDbSet<User> Users { get; set; }
         public IDbSet<Image> Images { get; set; }
         public IDbSet<Album> Albums { get; set; }
 
@@ -23,6 +24,7 @@ namespace Picterest.Data
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasKey(label => label.Id);
             modelBuilder.Entity<Album>().HasKey(label => label.AlbumId);
             modelBuilder.Entity<Image>().HasKey(label => label.ImageId);
             modelBuilder.Entity<Like>().HasKey(label => label.LikeId);
@@ -42,6 +44,9 @@ namespace Picterest.Data
                 .HasMany(item => item.Likes);
             modelBuilder.Entity<Album>()
                 .HasMany(item => item.Comments);
+
+            modelBuilder.Entity<User>()
+                .HasMany(item => item.FavoriteAlbums);
 
 
         }

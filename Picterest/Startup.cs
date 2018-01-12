@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web.Security;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,15 +25,16 @@ namespace Picterest
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public  void ConfigureServices(IServiceCollection services)
         {
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-            
+
             /*
             services.AddAuthentication().AddFacebook(facebookOptions =>
             {
@@ -46,16 +52,17 @@ namespace Picterest
             services.AddTransient<IGalleryRepo, GalleryRepo>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient(s => new GalleryDbContext(Configuration.GetConnectionString("DefaultConnection")));
-
+            
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
-
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public  void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+           
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -70,7 +77,7 @@ namespace Picterest
             app.UseStaticFiles();
 
             app.UseAuthentication();
-            
+
 
             app.UseMvc(routes =>
             {
@@ -78,6 +85,9 @@ namespace Picterest
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            
         }
+
+        
     }
 }

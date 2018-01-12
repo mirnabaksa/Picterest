@@ -13,10 +13,21 @@
         </div>
     </div>
     
-    
+    @if(!Model.Image.Likes.Any(l => l.UserId.Equals(Model.CurrentUserId)))
+    {
     <a asp-action="LikeSingle" asp-controller="ViewProfile" asp-route-imageId="@Model.Image.ImageId">
         <h2 align="center">Like</h2>
     </a>
+    }
+    else
+    {
+    <a asp-action="DislikeSingle" asp-controller="ViewProfile" asp-route-imageId="@Model.Image.ImageId">
+        <h5 align="left">Dislike</h5>
+    </a>
+    }
+    
+
+   
     
     
     

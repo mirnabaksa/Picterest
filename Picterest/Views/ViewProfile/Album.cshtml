@@ -40,9 +40,19 @@
                 }
                 else
                 {
-                    <a asp-action="Like" asp-controller="ViewProfile" asp-route-albumId="@Model.Album.AlbumId" asp-route-imageId="@i.ImageId">
-                        <h5 align="left">Like</h5>
-                    </a>
+                    if(!i.Likes.Any(l => l.UserId.Equals(Model.CurrentUserId)))
+                     {
+                         <a asp-action="Like" asp-controller="ViewProfile" asp-route-albumId="@Model.Album.AlbumId" asp-route-imageId="@i.ImageId">
+                             <h5 align="left" >Like</h5>
+                         </a>
+                    }
+                    else
+                    {
+                        <a asp-action="Dislike" asp-controller="ViewProfile" asp-route-albumId="@Model.Album.AlbumId" asp-route-imageId="@i.ImageId">
+                            <h5 align="left">Dislike</h5>
+                        </a>
+                    }
+
 
                     <div class="fh5co-border-bottom">
                         @i.Likes.Count likes ,

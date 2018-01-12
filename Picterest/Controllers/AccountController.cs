@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Picterest.Data;
 using Picterest.Models;
 using Picterest.Models.AccountViewModels;
 using Picterest.Services;
@@ -24,18 +25,26 @@ namespace Picterest.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IGalleryRepo _repository;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger, RoleManager<IdentityRole> roleManager, IGalleryRepo repository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _roleManager = roleManager;
+            _repository = repository;
+
         }
+
+
+
 
         [TempData]
         public string ErrorMessage { get; set; }
@@ -222,10 +231,17 @@ namespace Picterest.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    var myuser = new User()
+                    {
+                        Id = user.Id
+                    };
+                    _repository.AddUser(myuser);
 
+                    _logger.LogInformation("User created a new account with password.");
+                    await createRolesandUsers(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
@@ -239,6 +255,54 @@ namespace Picterest.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        private async Task createRolesandUsers(ApplicationUser user)
+        {
+            if (user.UserName.Equals("admin@admin.com"))
+            {
+                bool x = await _roleManager.RoleExistsAsync("Administrator");
+                if (!x)
+                {
+                    // first we create Admin rool    
+                    IdentityRole role = new IdentityRole
+                    {
+                        Name = "Administrator"
+                    };
+                    await _roleManager.CreateAsync(role);
+
+                    x = await _userManager.FindByNameAsync("admin") != null;
+
+                    if (!x)
+                    {
+                        var result1 = await _userManager.AddToRoleAsync(user, "Administrator");
+                        var result2 = await _signInManager.UserManager.AddToRoleAsync(user, "Administrator");
+                    }
+
+                }
+            }
+            else
+            {
+                bool x = await _roleManager.RoleExistsAsync("User");
+                if (!x)
+                {
+                    // first we create Admin rool    
+                    IdentityRole role = new IdentityRole
+                    {
+                        Name = "User"
+                    };
+                    await _roleManager.CreateAsync(role);
+
+
+                    var result1 = await _userManager.AddToRoleAsync(user, "User");
+                    var result2 = await _signInManager.UserManager.AddToRoleAsync(user, "User");
+
+
+                }
+            }
+
+
+
         }
 
         [HttpPost]
@@ -314,6 +378,12 @@ namespace Picterest.Controllers
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    var myuser = new User()
+                    {
+                        Id = user.Id
+                    };
+                    _repository.AddUser(myuser);
+
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {

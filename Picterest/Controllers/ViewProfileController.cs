@@ -7,6 +7,7 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -54,6 +55,7 @@ namespace Picterest.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "User")]
         public IActionResult AddAlbum()
         {
             return View();
@@ -97,9 +99,16 @@ namespace Picterest.Controllers
             {
                 Images = images,
                 Album = album,
-                IsOwner = album.ownerId.Equals(user.Id)
+                IsOwner = album.ownerId.Equals(user.Id),
+                CurrentUserId = user.Id
 
             };
+
+            foreach (Image i in model.Images)
+            {
+                i.Likes = _repository.GetLikes(i.ImageId);
+                i.Comments = _repository.getComments(i.ImageId);
+            }
 
 
             return View("Album", model);
@@ -123,7 +132,8 @@ namespace Picterest.Controllers
 
             ImageViewModel image = new ImageViewModel
             {
-                Image = _repository.GetImage(imageId)
+                Image = _repository.GetImage(imageId),
+                CurrentUserId = user.Id
             };
             image.IsOwner = image.Image.OwnerId.Equals(user.Id);
             return View("ViewSingle",image);
@@ -190,6 +200,13 @@ namespace Picterest.Controllers
             return await ViewAlbumImages(albumid);
         }
 
+        public async Task<IActionResult> Dislike(Guid imageId, Guid albumid)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            _repository.Dislike(imageId, user.Id);
+            return await ViewAlbumImages(albumid);
+        }
+
         public async Task<IActionResult> LikeSingle(Guid imageId)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -197,9 +214,16 @@ namespace Picterest.Controllers
             {
                 LikeId = Guid.NewGuid(),
                 UserId = user.Id,
-                UserName = user.UserName
+                UserName = user.UserName,
             };
             _repository.Like(imageId, like);
+            return await ViewSingle(imageId);
+        }
+
+        public async Task<IActionResult> DislikeSingle(Guid imageId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            _repository.Dislike(imageId, user.Id);
             return await ViewSingle(imageId);
         }
 
@@ -248,8 +272,7 @@ namespace Picterest.Controllers
         public async Task<IActionResult> AddToFavorites(Guid albumId)
         {
             var user = await _userManager.GetUserAsync(User);
-            _repository.GetAlbum(albumId);
-            user.FavoriteAlbums.Add(_repository.GetAlbum(albumId));
+            _repository.AddFavorite(user, albumId);
             return await ViewAlbumImages(albumId);
         }
     }

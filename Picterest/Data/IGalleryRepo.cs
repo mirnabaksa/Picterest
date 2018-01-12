@@ -21,5 +21,10 @@ namespace Picterest.Data
         List<Like> GetLikes(Guid imageId);
         void AddCommentToAlbum(Guid albumId, Comment comment);
         void AddCommentToImage(Guid imageid, Comment comment);
+        void AddFavorite(ApplicationUser user, Guid albumId);
+        void AddUser(User myuser);
+        User GetUser(string userId);
+        List<Comment> getComments(Guid imageId);
+        void Dislike(Guid imageId, string id);
     }
 }
