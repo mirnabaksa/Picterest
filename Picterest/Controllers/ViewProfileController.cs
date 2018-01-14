@@ -275,6 +275,13 @@ namespace Picterest.Controllers
             _repository.AddFavorite(user, albumId);
             return await ViewAlbumImages(albumId);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateImage(string Name, string Description, Guid imageId)
+        {
+            _repository.UpdateImage(Name, Description, imageId);
+            return await ViewSingle(imageId);
+        }
     }
 
 }

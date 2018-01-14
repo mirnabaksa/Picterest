@@ -7,30 +7,69 @@
 
 <div class="fh5co-narrow-content">
 
+    @if (Model.Image.OwnerId.Equals(Model.CurrentUserId) && (Model.Image.Description == null || Model.Image.Name == null))
+    {
+        <form asp-controller="ViewProfile" asp-action="UpdateImage" asp-route-imageId="@Model.Image.ImageId" method="post" enctype="multipart/form-data">
+            <div class="col-md-6">
+                @if (Model.Image.Name == null)
+                {
+                    
+                    <div class="form-group">
+                        Add image name
+                        <input type="text" name="Name" class="form-control" enabled />
+                    </div>
+                }
+
+                @if (Model.Image.Description == null)
+                {
+                    <div class="form-group">
+                      Add image description
+                        <input type="text" name="Description" class="form-control" enabled />
+                    </div>
+                }
+                
+                @if (Model.Image.Description == null || Model.Image.Name == null)
+                {
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Save album</button>
+                    </div>
+                }
+               
+
+            </div>
+        </form>
+
+    }
+
+
+
+    <h2 class="fh5co-heading">@Model.Image.Name</h2>
+    <p>
+    <p>@Model.Image.Description</p>
+
+
+
     <div class="row">
         <div class="col-md-12">
             <figure><img src="/Uploads/@Model.Image.Path" class="img-responsive"></figure>
         </div>
     </div>
-    
-    @if(!Model.Image.Likes.Any(l => l.UserId.Equals(Model.CurrentUserId)))
+
+    @if (!Model.Image.Likes.Any(l => l.UserId.Equals(Model.CurrentUserId)))
     {
-    <a asp-action="LikeSingle" asp-controller="ViewProfile" asp-route-imageId="@Model.Image.ImageId">
-        <h2 align="center">Like</h2>
-    </a>
+        <a asp-action="LikeSingle" asp-controller="ViewProfile" asp-route-imageId="@Model.Image.ImageId">
+            <h2 align="center">Like</h2>
+        </a>
     }
     else
     {
-    <a asp-action="DislikeSingle" asp-controller="ViewProfile" asp-route-imageId="@Model.Image.ImageId">
-        <h5 align="left">Dislike</h5>
-    </a>
+        <a asp-action="DislikeSingle" asp-controller="ViewProfile" asp-route-imageId="@Model.Image.ImageId">
+            <h2 align="center">Dislike</h2>
+        </a>
     }
-    
 
-   
-    
-    
-    
+
+
     <div class="fh5co-border-bottom">
         @Model.Image.Likes.Count likes ,
         @Model.Image.Comments.Count comments
@@ -42,21 +81,21 @@
         {
             <b> @i.UserName </b>
             @i.Content
-            <br/>
+            <br />
 
         }
     </div>
-    
-    
-    
+
+
+
     Add a comment...
     <form asp-action="AddCommentToImage" asp-controller="ViewProfile" method="post" enctype="multipart/form-data" asp-route-imageid=@Model.Image.ImageId>
         <div class="form-group col-md-3">
-            <input type="text" name="Comment"/>
-            <br/>
-            <br/>
+            <input type="text" name="Comment" />
+            <br />
+            <br />
         </div>
-      
+
 
         <div class="form-group col-md-3">
             <button type="submit" class="btn btn-success">Add </button>

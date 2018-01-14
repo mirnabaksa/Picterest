@@ -8,6 +8,7 @@ namespace Picterest.Models
     public class User
     {
         public string Id { get; set; }
+        public string Bio { get; set; }
         public List<Album> FavoriteAlbums { get; set; }
 
         public User()

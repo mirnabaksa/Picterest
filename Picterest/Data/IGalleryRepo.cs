@@ -26,5 +26,6 @@ namespace Picterest.Data
         User GetUser(string userId);
         List<Comment> getComments(Guid imageId);
         void Dislike(Guid imageId, string id);
+        void UpdateImage(string name, string description, Guid imageId);
     }
 }

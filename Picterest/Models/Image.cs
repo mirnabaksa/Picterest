@@ -9,6 +9,8 @@ namespace Picterest.Models
     public class Image
     {
         public Guid ImageId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public string OwnerId { get; set; }
         public string Path { get; set; }
         public List<Album> Albums { get; set; }

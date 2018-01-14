@@ -133,6 +133,14 @@ namespace Picterest.Data
             i.Likes?.Remove(like);
             _context.SaveChanges();
         }
+
+        public void UpdateImage(string name, string description, Guid imageId)
+        {
+            Image image = GetImage(imageId);
+             image.Name = name;
+            image.Description = description;
+            _context.SaveChanges();
+        }
     }
 }
 
