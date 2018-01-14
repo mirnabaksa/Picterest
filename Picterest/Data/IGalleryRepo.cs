@@ -25,7 +25,9 @@ namespace Picterest.Data
         void AddUser(User myuser);
         User GetUser(string userId);
         List<Comment> getComments(Guid imageId);
+        Task<List<Album>> GetFeaturedAlbums();
         void Dislike(Guid imageId, string id);
         void UpdateImage(string name, string description, Guid imageId);
+        Task<List<Album>> GetAllAlbums();
     }
 }

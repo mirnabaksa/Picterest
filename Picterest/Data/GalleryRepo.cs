@@ -31,7 +31,7 @@ namespace Picterest.Data
 
         public Image GetImage(Guid imageId)
         {
-            return _context.Images.Where(a => a.ImageId.Equals(imageId)).Include(i => i.Albums).Include(i => i.Likes).Include(i => i.Comments).FirstOrDefault();
+            return _context.Images.Where(a => a.ImageId.Equals(imageId)).Include(i => i.Likes).Include(i => i.Comments).FirstOrDefault();
         }
 
         public void AddImage(Image image)
@@ -140,6 +140,16 @@ namespace Picterest.Data
              image.Name = name;
             image.Description = description;
             _context.SaveChanges();
+        }
+
+        public Task<List<Album>> GetAllAlbums()
+        {
+            return _context.Albums.Include(i => i.Images).ToListAsync();
+        }
+
+        public Task<List<Album>> GetFeaturedAlbums()
+        {
+            return _context.Albums.Where(a => a.IsFeatured).ToListAsync();
         }
     }
 }

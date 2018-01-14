@@ -181,7 +181,7 @@ namespace Picterest.Controllers
 
                 imageEntity.Path = file.FileName;
                 images.Add(imageEntity);
-                imageEntity.Albums.Add(album);
+                imageEntity.AlbumId = album.AlbumId;
             }
 
             return images;

@@ -29,9 +29,9 @@ namespace Picterest.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user != null && user.UserName.Equals("admin@admin.com")) return AdminPanel();
+            if (user != null && user.UserName.Equals("admin@admin.com")) return await AdminPanel();
 
-            return View();
+            return View(await _repository.GetFeaturedAlbums());
         }
 
        
@@ -43,11 +43,11 @@ namespace Picterest.Controllers
         }
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult AdminPanel()
+        public async Task<IActionResult> AdminPanel()
         {
-
-
-            return View("AdminPanel");
+            List<Album> all = await _repository.GetAllAlbums();
+            all.Sort((a,b) => a.Likes.Count - b.Likes.Count);
+            return View("AdminPanel", all);
         }
 
         public IActionResult Contact()
@@ -86,6 +86,12 @@ namespace Picterest.Controllers
                 a.Images = _repository.GetAlbumImages(a.AlbumId);
             }
             return View(myUser.FavoriteAlbums);
+        }
+
+        public async Task<IActionResult> AddToFavorites(Guid albumId)
+        {
+            _repository.MarkAsFavorite(albumId);
+            return await AdminPanel();
         }
     }
 }

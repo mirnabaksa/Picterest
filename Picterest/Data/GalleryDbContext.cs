@@ -32,8 +32,7 @@ namespace Picterest.Data
 
             //many - many
             modelBuilder.Entity<Album>()
-                .HasMany(item => item.Images)
-                .WithMany(image => image.Albums);
+                .HasMany(item => item.Images);
 
             modelBuilder.Entity<Album>()
                 .HasMany(item => item.Likes);
