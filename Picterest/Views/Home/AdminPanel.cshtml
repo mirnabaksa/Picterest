@@ -13,19 +13,22 @@
             <div class="gallery-item">
                 <a asp-controller="ViewProfile" asp-action="ViewAlbumImages" asp-route-albumId="@a.AlbumId">
                     <img src="/Uploads/@a.Images[1].Path" alt="Free HTML5 Bootstrap Template by FreeHTML5.co">
-                    <span class="overlay">
-                        <h2>@a.Name</h2>
-                        <span>@a.Images.Count images</span>
-                        <span>@a.Likes.Count likes</span>
-                    </span>
-             
+                   
+
                 </a>
-                
-                <a asp-action="AddToFeatured" asp-controller="Home" asp-route-albumId="@a.AlbumId" >
+           
+            
+                <a asp-action="AddToFeatured" asp-controller="Home" asp-route-albumId="@a.AlbumId">
                     <h4 align="center">Add to featured</h4>
                 </a>
+                
+                <div class="fh5co-border-bottom">
+                    <h2>@a.Name</h2>
+                    @a.Images.Count images
+                   @a.Likes.Count likes
+                </div>
             </div>
-        }
+                }
     }
 
 </div>

@@ -29,5 +29,6 @@ namespace Picterest.Data
         void Dislike(Guid imageId, string id);
         void UpdateImage(string name, string description, Guid imageId);
         Task<List<Album>> GetAllAlbums();
+        void MarkAsFeatured(Guid albumId);
     }
 }

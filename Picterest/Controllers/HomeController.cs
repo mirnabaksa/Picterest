@@ -88,9 +88,9 @@ namespace Picterest.Controllers
             return View(myUser.FavoriteAlbums);
         }
 
-        public async Task<IActionResult> AddToFavorites(Guid albumId)
+        public async Task<IActionResult> AddToFeatured(Guid albumId)
         {
-            _repository.MarkAsFavorite(albumId);
+            _repository.MarkAsFeatured(albumId);
             return await AdminPanel();
         }
     }

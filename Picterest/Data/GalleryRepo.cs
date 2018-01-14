@@ -149,7 +149,14 @@ namespace Picterest.Data
 
         public Task<List<Album>> GetFeaturedAlbums()
         {
-            return _context.Albums.Where(a => a.IsFeatured).ToListAsync();
+            return _context.Albums.Where(a => a.IsFeatured).Include(i => i.Images).ToListAsync();
+        }
+
+        public void MarkAsFeatured(Guid albumId)
+        {
+            Album album = GetAlbum(albumId);
+            album.IsFeatured = true;
+            _context.SaveChanges();
         }
     }
 }
