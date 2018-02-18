@@ -14,8 +14,8 @@ Features:
 Admin features include:
 - adding featured albums to the front page
 Admin login information: 
-  admin@admin.com
-   
+  - username: admin@admin.com 
+  - pass: Password1#
 
 
-The web app is available at: 
+The web app is available at: http://picterest.azurewebsites.net/
