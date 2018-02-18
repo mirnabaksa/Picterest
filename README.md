@@ -13,6 +13,9 @@ Features:
 
 Admin features include:
 - adding featured albums to the front page
+Admin login information: 
+  admin@admin.com
+   
 
 
 The web app is available at: 
