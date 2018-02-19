@@ -359,6 +359,7 @@ figure {
     -webkit-transition: 0.5s;
     -o-transition: 0.5s;
     transition: 0.5s;
+	color: white;
 }
 
 .fh5co-gallery .gallery-item .overlay-opaque {
@@ -431,6 +432,7 @@ figure {
     bottom: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.5);
+	color: white;
 }
 
 .fh5co-gallery .gallery-item:hover img {

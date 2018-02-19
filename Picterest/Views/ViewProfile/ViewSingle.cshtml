@@ -11,14 +11,7 @@
     {
         <form asp-controller="ViewProfile" asp-action="UpdateImage" asp-route-imageId="@Model.Image.ImageId" method="post" enctype="multipart/form-data">
             <div class="col-md-6">
-                @if (Model.Image.Name == null)
-                {
-                    
-                    <div class="form-group">
-                        Add image name
-                        <input type="text" name="Name" class="form-control" enabled />
-                    </div>
-                }
+               
 
                 @if (Model.Image.Description == null)
                 {
@@ -26,14 +19,13 @@
                       Add image description
                         <input type="text" name="Description" class="form-control" enabled />
                     </div>
-                }
-                
-                @if (Model.Image.Description == null || Model.Image.Name == null)
-                {
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success">Save album</button>
+					
+					 <div class="form-group">
+                        <button type="submit" class="btn btn-success">Save image</button>
                     </div>
                 }
+                
+               
                
 
             </div>

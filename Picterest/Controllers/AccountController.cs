@@ -283,22 +283,22 @@ namespace Picterest.Controllers
             }
             else
             {
-                bool x = await _roleManager.RoleExistsAsync("User");
+               bool x = await _roleManager.RoleExistsAsync("User");
+                IdentityRole role = null;
                 if (!x)
                 {
                     // first we create Admin rool    
-                    IdentityRole role = new IdentityRole
+                     role = new IdentityRole
                     {
                         Name = "User"
                     };
                     await _roleManager.CreateAsync(role);
 
-
-                    var result1 = await _userManager.AddToRoleAsync(user, "User");
-                    var result2 = await _signInManager.UserManager.AddToRoleAsync(user, "User");
-
-
+                    
                 }
+
+                var result1 = await _userManager.AddToRoleAsync(user, "User");
+                var result2 = await _signInManager.UserManager.AddToRoleAsync(user, "User");
             }
 
 

@@ -1,29 +1,38 @@
 ﻿@model List<Album>
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
-<form asp-controller="Home" asp-action="FilterAlbums">
-    <p align="right">
-        Filter Picterest by album name: <input type="text" name="filter">
-        <input type="submit" value="Search" class="btn btn-success"/>
-    </p>
-</form>
+
 
 
 
 <div class="fh5co-gallery">
-    @if (Model != null)
+    @if (SignInManager.IsSignedIn(User))
     {
-        foreach(Album a in Model)
+        <form asp-controller="Home" asp-action="FilterAlbums">
+            <p align="right">
+                Filter Picterest by album name: <input type="text" name="filter">
+                <input type="submit" value="Search" class="btn btn-success"/>
+            </p>
+        </form>
+
+
+        if(Model != null)
          {
-             <a asp-controller="ViewProfile" asp-action="ViewAlbumImages" asp-route-albumId=@a.AlbumId class="gallery-item">
-                 <img src="/Uploads/@a.Images[0].Path" alt="Free HTML5 Bootstrap Template by FreeHTML5.co">
-                 <span class="overlay">
-                     <h2>@a.Name</h2>
-                     <span>@a.Images.Count</span>
-                 </span>
-             </a>
-         }    
+             foreach (Album a in Model)
+             {
+                 <a asp-controller="ViewProfile" asp-action="ViewAlbumImages" asp-route-albumId=@a.AlbumId class="gallery-item">
+                     <img src="/Uploads/@a.Images[0].Path" alt="Free HTML5 Bootstrap Template by FreeHTML5.co">
+                     <span class="overlay">
+                         <h2>@a.Name</h2>
+                         <span>@a.Images.Count</span>
+                     </span>
+                 </a>
+             }
+         }
     }
-    
+   
+
 
 
 </div>
