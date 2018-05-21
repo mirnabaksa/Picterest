@@ -17,5 +17,3 @@ Admin login information:
   - username: admin@admin.com 
   - pass: Password1#
 
-
-The web app is available at: http://picterest.azurewebsites.net/
